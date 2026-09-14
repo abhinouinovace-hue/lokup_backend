@@ -21,7 +21,7 @@ class AuthController extends Controller
 
         $isExistingUser = User::where('phone', $normalizedPhone)->exists();
 
-        $otp = random_int(100000, 999999);
+        $otp = random_int(1000, 9999);
 
         DB::table('otp_verifications')->updateOrInsert(
             ['phone' => $normalizedPhone],
@@ -46,7 +46,7 @@ class AuthController extends Controller
     {
         $request->validate([
             'phone' => 'required|string|max:20',
-            'otp' => 'required|digits:6',
+            'otp' => 'required|digits:4',
         ]);
 
         $normalizedPhone = preg_replace('/\D+/', '', $request->phone);
