@@ -49,7 +49,7 @@ class AuthController extends Controller
             ->value('otp');
 
         do {
-            $otp = (string) random_int(100000, 999999);
+            $otp = (string) random_int(1000, 9999);
         } while ($previousOtp && Hash::check($otp, $previousOtp));
 
         DB::table('otp_verifications')->updateOrInsert(
@@ -80,7 +80,7 @@ class AuthController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'phone' => 'required|string|max:20',
-            'otp' => 'required|string|size:6',
+            'otp' => 'required|string|size:4',
         ]);
 
         if ($validator->fails()) {
