@@ -10,6 +10,8 @@ class ProfileController extends Controller
 {
     public function setup(Request $request)
     {
+        $this->normalizeGender($request);
+
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:100',
             'gender' => 'required|in:Male,Female',
@@ -37,6 +39,8 @@ class ProfileController extends Controller
 
     public function update(Request $request)
     {
+        $this->normalizeGender($request);
+
         $validator = Validator::make($request->all(), [
             'name' => 'nullable|string|max:100',
             'gender' => 'nullable|in:Male,Female',
@@ -63,5 +67,20 @@ class ProfileController extends Controller
             'message' => 'Profile updated successfully',
             'user' => $user->fresh(),
         ]);
+    }
+
+    private function normalizeGender(Request $request): void
+    {
+        if (! $request->filled('gender')) {
+            return;
+        }
+
+        $gender = strtolower((string) $request->input('gender'));
+
+        if (in_array($gender, ['male', 'female'], true)) {
+            $request->merge([
+                'gender' => ucfirst($gender),
+            ]);
+        }
     }
 }
